@@ -1,5 +1,6 @@
-package com.tphuocthai;
+package com.tphuocthai.spark;
 
+import com.tphuocthai.config.ApplicationConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
@@ -24,7 +25,7 @@ import java.util.Map;
  */
 public class SparkKafkaConsumer {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void startStream() throws InterruptedException {
 
         ApplicationConfig config = new ApplicationConfig();
 
