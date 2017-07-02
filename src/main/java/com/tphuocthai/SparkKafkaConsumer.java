@@ -24,21 +24,23 @@ import java.util.Map;
  */
 public class SparkKafkaConsumer {
 
-
     public static void main(String[] args) throws InterruptedException {
-        SparkConf conf = new SparkConf().setAppName("kafka-spark-streaming").setMaster("local[*]");
+
+        ApplicationConfig config = new ApplicationConfig();
+
+        SparkConf conf = new SparkConf().setAppName(config.getAppName()).setMaster(config.getSparkMaster());
         JavaSparkContext sc = new JavaSparkContext(conf);
         JavaStreamingContext ssc = new JavaStreamingContext(sc, Durations.seconds(2));
 
         Map<String, Object> kafkaParams = new HashMap() {{
-            put("bootstrap.servers", "localhost:9092");
+            put("bootstrap.servers", config.getKafkaBootstrapServer());
             put("key.deserializer", StringDeserializer.class);
             put("value.deserializer", StringDeserializer.class);
-            put("group.id", "my_group");
+            put("group.id", config.getKafkaGroupId());
             put("auto.offset.reset", "latest");
             put("enable.auto.commit", false);
         }};
-        Collection<String> topics = Arrays.asList("kafka-spark-streaming");
+        Collection<String> topics = Arrays.asList(config.getKafkaTopics().split(","));
 
         JavaInputDStream<ConsumerRecord<Object, Object>> dStream = KafkaUtils.createDirectStream(ssc,
                 LocationStrategies.PreferConsistent(),
